@@ -35,9 +35,11 @@ words = ['fish',
          "centaur",
          "pegasus",
          "Greek",
+         "Polyphemus",
          "American",
          "South African",
          "San Francisco",
+         "Hanoi",
          "horse",
          "Elon Musk",
          "Brexit",
@@ -65,7 +67,6 @@ words = ['fish',
          "David Bowie",
          "David Brooks",
          "Jorge Luis Borges",
-         "astronaut",
          "mechanic",
          "lawyer",
          "sailor",
@@ -137,19 +138,20 @@ for test in tests:
 #
 
 tmp = [vecs[word] for word in words]
-X_embedded = TSNE(n_components=2, n_iter=2500, verbose=2, method="exact").fit_transform(tmp)
+# X_embedded = TSNE(n_components=2, n_iter=2500, verbose=2, method="exact").fit_transform(tmp)
+X_embedded = TSNE(n_components=2, n_iter=10000, verbose=2, method="exact", metric="cosine").fit_transform(tmp)
 
 print("Computed t-SNE", X_embedded.shape)
 
 df = pd.DataFrame(columns=['x', 'y', 'word'])
 # This is using wrong X and Y, but you understand.
 # You should change to use Y as the cos and X as the vectors
-# df['x'], df['y'], df['word'] = X_embedded[:,0], X_embedded[:,1], words
+df['x'], df['y'], df['word'] = X_embedded[:,0], X_embedded[:,1], words
 
 # make the Y
-y = "Rhinocerous"
-Y = [cos(bc.encode([y]),vecs[word])[0] for word in words]
-df['x'], df['y'], df['word'] = X_embedded[:,0], Y, words
+# y = "Rhinocerous"
+# Y = [cos(bc.encode([y]),vecs[word])[0] for word in words]
+# df['x'], df['y'], df['word'] = X_embedded[:,0], Y, words
 
 source = ColumnDataSource(ColumnDataSource.from_df(df))
 labels = LabelSet(x="x", y="y", text="word", y_offset=8,
